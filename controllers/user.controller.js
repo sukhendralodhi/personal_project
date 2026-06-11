@@ -4,7 +4,7 @@ const { hashPassword, verifyPassword } = require("../utils/hash.password.js");
 
 async function handleUserRegistration(req, res) {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
         if (!name || !email || !password) {
             return res.status(400).json({
                 message: 'All fields are required'
@@ -26,6 +26,7 @@ async function handleUserRegistration(req, res) {
             name,
             email,
             password: hashedPassword,
+            role: role || 'user'
         });
 
         return res.status(201).json({
@@ -85,6 +86,7 @@ async function handleUserLogin(req, res) {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                role: user.role,
                 token: token
             },
         });
@@ -111,7 +113,8 @@ async function handleProfile(req, res) {
             message: "User fetch successfully",
             data: {
                 userName: user.name,
-                userEmail: user.email
+                userEmail: user.email,
+                userRole: user.role
             }
         });
     } catch (error) {
@@ -122,8 +125,17 @@ async function handleProfile(req, res) {
     }
 }
 
+const handleUserLogout = (req, res) => {
+    res.clearCookie("token");
+
+    return res.status(200).json({
+        message: "Logged out successfully",
+    });
+};
+
 module.exports = {
     handleUserRegistration,
     handleUserLogin,
-    handleProfile
+    handleProfile,
+    handleUserLogout
 }

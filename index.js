@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDatabase = require('./db/db.connection.js');
 const userRouter = require('./routes/user.router.js');
+const blogRouter = require('./routes/blog.router.js');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
@@ -25,6 +26,8 @@ connectDatabase(DATABASE_URL).then(() => {
 }).catch((error) => { console.log(error) });
 
 app.use('/api', userRouter);
+// blog route 
+app.use("/api", blogRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
