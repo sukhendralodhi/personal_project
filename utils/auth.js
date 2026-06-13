@@ -4,6 +4,7 @@ require('dotenv').config();
 const generateToken = async (user) => {
     return await jwt.sign({
         id: user._id,
+        role: user.role,
         email: user.email
     },
         process.env.JWT_SECRET,

@@ -4,7 +4,7 @@ const { hashPassword, verifyPassword } = require("../utils/hash.password.js");
 
 async function handleUserRegistration(req, res) {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
         if (!name || !email || !password) {
             return res.status(400).json({
                 message: 'All fields are required'
@@ -25,8 +25,7 @@ async function handleUserRegistration(req, res) {
         await User.create({
             name,
             email,
-            password: hashedPassword,
-            role: role || 'user'
+            password: hashedPassword
         });
 
         return res.status(201).json({
@@ -75,21 +74,21 @@ async function handleUserLogin(req, res) {
 
         // console.log("Generated Token:", token);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production' || false,
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        })
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === 'production' || false,
+        //     sameSite: "strict",
+        //     maxAge: 7 * 24 * 60 * 60 * 1000,
+        // })
 
         return res.status(200).json({
             message: "Login successful",
+            token,
             user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token: token
             },
         });
 

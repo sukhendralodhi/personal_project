@@ -35,7 +35,10 @@ async function checkAuthentication(req, res, next) {
             });
         }
 
-        req.user = user;
+        req.user = {
+            id: user._id,
+            role: user.role
+        };
 
         next();
 
@@ -46,8 +49,9 @@ async function checkAuthentication(req, res, next) {
     }
 }
 
-async function checkRestrictedAccess(roles = []) {
-    return async function (req, res, next) {
+function checkRestrictedAccess(roles = []) {
+    return function (req, res, next) {
+        console.log("User role:", req.user?.role); // Debugging log
         if (!req.user) {
             return res.status(401).json({
                 message: "User not authenticated"
@@ -61,8 +65,7 @@ async function checkRestrictedAccess(roles = []) {
         }
 
         next();
-    }
-
+    };
 }
 
 module.exports = {
