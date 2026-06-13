@@ -16,6 +16,13 @@ async function handleCreateBlog(req, res) {
             });
         }
 
+        const existingBlog = await Blog.findOne({ title });
+        if (existingBlog) {
+            return res.status(400).json({
+                message: "A blog with this title already exists"
+            });
+        }
+
         const newBlog = await Blog.create({
             title,
             description,
@@ -39,7 +46,12 @@ async function handleCreateBlog(req, res) {
 
 async function handleGetBlogs(req, res) {
     try {
+
+        // console.log("Fetching blogs for user:", req.user.id);
+
         const blogs = await Blog.find({ author: req.user.id });
+
+        // console.log("Blogs fetched:", blogs);
 
         if (!blogs || blogs.length === 0) {
             return res.status(404).json({
@@ -51,6 +63,7 @@ async function handleGetBlogs(req, res) {
             message: "Blogs fetched successfully",
             data: blogs
         });
+
     } catch (error) {
         console.error("Get Blogs Error:", error);
 

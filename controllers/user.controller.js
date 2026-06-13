@@ -20,7 +20,7 @@ async function handleUserRegistration(req, res) {
         }
 
         const hashedPassword = await hashPassword(password);
-        console.log("Hashed Password:", hashedPassword);
+        // console.log("Hashed Password:", hashedPassword);
 
         await User.create({
             name,
@@ -69,9 +69,11 @@ async function handleUserLogin(req, res) {
             });
         }
 
-        console.log(user)
+        // console.log(user)
 
         const token = await generateToken(user);
+
+        // console.log("Generated Token:", token);
 
         res.cookie("token", token, {
             httpOnly: true,
