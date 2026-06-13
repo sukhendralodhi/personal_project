@@ -1,9 +1,12 @@
 const express = require('express');
 const connectDatabase = require('./db/db.connection.js');
-const userRouter = require('./routes/user.router.js');
+const authRouter = require('./routes/auth.router.js');
 const blogRouter = require('./routes/blog.router.js');
+const userRouter = require('./routes/user.route.js');
+
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const { checkAuthentication } = require('./middlewares/bearer.middleware.js');
 
 const PORT = process.env.PORT || 8001;
 
@@ -25,9 +28,9 @@ connectDatabase(DATABASE_URL).then(() => {
 
 }).catch((error) => { console.log(error) });
 
-app.use('/api', userRouter);
-// blog route 
-app.use("/api", blogRouter);
+app.use('/api', authRouter);
+app.use("/api", checkAuthentication, blogRouter);
+app.use("/api", checkAuthentication, userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
