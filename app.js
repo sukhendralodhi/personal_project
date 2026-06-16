@@ -4,6 +4,7 @@ const authRouter = require('./routes/auth.router.js');
 const blogRouter = require('./routes/blog.router.js');
 const userRouter = require('./routes/user.route.js');
 const adminRouter = require('./routes/admin.router.js');
+const commentRouter = require('./routes/comment.route.js');
 
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
@@ -39,6 +40,9 @@ app.use(
     checkRestrictedAccess(["admin"]),
     adminRouter
 );
+
+// comments route 
+app.use("/api", checkAuthentication, commentRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
