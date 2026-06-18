@@ -86,6 +86,19 @@ async function handleGetComments(req, res) {
     }
 }
 
+async function handleDeleteComment(req, res) {
+    try {
+        const {commentId} = req.params;
+        
+        
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+}
+
 module.exports = {
     handleCreateComment,
     handleGetComments
